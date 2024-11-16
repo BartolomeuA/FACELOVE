@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil de Usuário</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f8f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    /* Contêiner principal do perfil */
+    .profile-container {
+      width: 100%;
+      max-width: 600px;
+      background-color: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    /* Imagem de perfil */
+    .profile-container img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #ff004d;
+      transition: border 0.3s ease;
+    }
+
+    .profile-container img:hover {
+      border-color: #00d4ff;
+    }
+
+    /* Títulos e textos */
+    .profile-container h2 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      margin-top: 15px;
+    }
+
+    .profile-container p {
+      font-size: 16px;
+      color: #666;
+      line-height: 1.5;
+      margin-top: 5px;
+    }
+
+    .profile-container p strong {
+      color: #333;
+      font-weight: 600;
+    }
+
+    /* Botão de logout */
+    .logout-btn {
+      margin-top: 25px;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      background-color: #ff004d;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .logout-btn:hover {
+      background-color: #d1003b;
+      transform: scale(1.05);
+    }
+
+/* Estilo para o corpo da página */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f8f8;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100vh;
+  padding-top: 0px;
+}
+
+/* Contêiner do perfil */
+.profile-container {
+  background-color: none;
+  padding: 25px;
+  width: 90%;
+  max-width: 1200px;
+  border-radius: none;
+ 
+  text-align: center;
+}
+
+.profile-container img {
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border: 3px solid #ff004d; /* Cor que lembra o TikTok */
+  margin-bottom: 20px;
+  transition: border 0.3s ease;
+}
+
+.profile-container img:hover {
+  border-color: #00d4ff;
+}
+
+.profile-container h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 15px;
+  color: #333;
+}
+
+.profile-container p {
+  font-size: 16px;
+  margin: 8px 0;
+  color: #666;
+  line-height: 1.5;
+}
+
+.profile-container p strong {
+  color: #333;
+  font-weight: 600;
+}
+
+/* Botão de logout */
+.logout-btn {
+  margin-top: 25px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #ff004d;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 100%;
+}
+
+.logout-btn:hover {
+  background-color: #d1003b;
+  transform: scale(1.05);
+}
+
+/* Contêiner para os vídeos */
+#videoCarousel {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+  gap: 20px;
+  width: 100%;
+  padding: 20px;
+  
+  margin-top: 30px;
+}
+
+/* Estilo para o vídeo */
+.video {
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  width: 20rem;
+  height: 20rem; /* Tamanho reduzido para vídeos */
+  justify-content: flex-start;
+}
+
+.video video {
+  width: 20rem;
+  height: 20rem; /* Tamanho reduzido para vídeos */
+  object-fit: cover;
+  border-bottom: 2px solid #f1f1f1;
+}
+
+.video-header {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #f1f1f1;
+}
+
+.video-header img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.video-header span {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+  </style>
+</head>
+<body>
+
+  <!-- Perfil do usuário -->
+  <div class="profile-container">
+    <img id="profilePic" src="img/user.png" alt="Imagem de Perfil">
+    <h2 id="username"></h2>
+    <p><strong>Idade:</strong> <span id="age"></span></p>
+    <p><strong>Gênero:</strong> <span id="gender"></span></p>
+    <p><strong>Sobre:</strong> <span id="about"></span></p>
+    <p><strong>IP:</strong> <span id="ip"></span></p>
+    
+    
+    
+    <div class="carousel" id="videoCarousel"></div>
+    
+    
+  </div>
+
+  <!-- Carrossel de vídeos -->
+
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { getStorage, ref as storageRef, listAll, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+  import { getDatabase, ref as dbRef, get } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+  // Configuração do Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyDsP7lNqu-tDpJxpsyv8t1DW0M_u2EAE3o",
+    authDomain: "bartolomeu-cruz.firebaseapp.com",
+    databaseURL: "https://bartolomeu-cruz-default-rtdb.firebaseio.com",
+    projectId: "bartolomeu-cruz",
+    storageBucket: "bartolomeu-cruz.appspot.com",
+    messagingSenderId: "408863884951",
+    appId: "1:408863884951:web:13e8c2282139c1307dcbd2",
+    measurementId: "G-8TF4WLHKX3"
+  };
+
+  // Inicializar o Firebase
+  const app = initializeApp(firebaseConfig);
+  const storage = getStorage(app);
+  const database = getDatabase(app);
+
+  // Função para listar os vídeos do usuário logado
+  async function listUserVideos() {
+    const username = localStorage.getItem('username'); // Obtém o nome de usuário logado
+    if (!username) {
+      console.error('Usuário não encontrado');
+      return;
+    }
+
+    const userVideosRef = storageRef(storage, `videos/${username}`);
+    try {
+      const listRef = await listAll(userVideosRef);
+
+      // Para cada item de vídeo encontrado
+      for (const item of listRef.items) {
+        const videoUrl = await getDownloadURL(item); // URL do vídeo
+        const profilePicUrl = await getProfilePic(username); // URL da foto de perfil
+        displayVideo(username, profilePicUrl, videoUrl); // Exibe o vídeo
+      }
+    } catch (error) {
+      console.error('Erro ao listar vídeos:', error);
+    }
+  }
+
+  // Função para obter a URL da foto de perfil do usuário logado
+  async function getProfilePic(username) {
+    const profilePicRef = storageRef(storage, `profile_images/${username}/profile_pic.png`);
+    try {
+      const url = await getDownloadURL(profilePicRef);
+      return url; // Retorna a URL da imagem de perfil
+    } catch (error) {
+      console.error(`Imagem de perfil não encontrada para ${username}`, error);
+      return 'default_profile_pic_url.jpg'; // URL padrão caso a imagem não seja encontrada
+    }
+  }
+
+  // Função para exibir o vídeo com o nome e foto do usuário
+  function displayVideo(username, profilePicUrl, videoUrl) {
+    const carousel = document.getElementById('videoCarousel');
+    const videoDiv = document.createElement('div');
+    videoDiv.className = 'video';
+
+    // Criar o elemento de vídeo
+    const videoElement = document.createElement('video');
+    videoElement.src = videoUrl;
+    videoElement.controls = true;
+
+    // Adiciona conteúdo HTML para o vídeo, nome e imagem de perfil
+    videoDiv.innerHTML = `
+      <div class="video-header">
+      
+      </div>
+    `;
+    videoDiv.appendChild(videoElement);
+
+    // Adiciona o vídeo ao carrossel
+    carousel.appendChild(videoDiv);
+  }
+
+  // Função para carregar os dados do perfil do localStorage
+  window.onload = () => {
+    // Recupera os dados armazenados no localStorage
+    const username = localStorage.getItem('username');
+    const profilePic = localStorage.getItem('profileImageURL') || 'img/user.png'; // Imagem padrão caso não tenha URL
+    const age = localStorage.getItem('age');
+    const gender = localStorage.getItem('gender');
+    const about = localStorage.getItem('about');
+    const ip = localStorage.getItem('userIP');
+
+    // Preenche os campos do perfil com os dados recuperados
+    if (username) {
+      document.getElementById('username').textContent = username.charAt(0).toUpperCase() + username.slice(1);
+    } else {
+      document.getElementById('username').textContent = 'Usuário não encontrado';
+    }
+
+    document.getElementById('profilePic').src = profilePic;
+    document.getElementById('age').textContent = age || 'Não informado';
+    document.getElementById('gender').textContent = gender || 'Não informado';
+    document.getElementById('about').textContent = about || 'Não informado';
+    document.getElementById('ip').textContent = ip || 'Não disponível';
+
+    // Carregar os vídeos do usuário
+    listUserVideos(username);
+  };
+</script>

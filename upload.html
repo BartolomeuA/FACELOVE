@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload de Vídeos</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #333;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #uploadContainer {
+            text-align: center;
+        }
+        #uploadButton {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        #uploadStatus {
+            margin-top: 10px;
+        }
+        #fileInputContainer {
+            cursor: pointer;
+        }
+        #fileInput {
+            display: none;
+        }#fileInputImage{
+          width: 3rem;
+          height: 3rem;
+        }
+.sair{
+width: 2rem;
+height: 2rem;
+margin-right: 2rem;
+}
+.topo{
+  height: 2rem;
+  position: fixed;
+  top: 1rem;
+  right: 0rem;
+}
+    </style>
+</head>
+<body>
+<header class="topo">
+  <a href="home.html"><img src="img/sair.png" alt="logo" class="sair"></a>
+</header>
+
+    <div id="uploadContainer">
+        <h1>Upload de Vídeos</h1>
+
+        <!-- Contêiner do input de arquivo representado por uma imagem -->
+        <div id="fileInputContainer">
+            <img src="/img/o.png" alt="Selecionar Vídeo" id="fileInputImage">
+            <!-- Input de arquivo oculto -->
+            <input type="file" id="fileInput" accept="video/*" required>
+        </div>
+
+        <button id="uploadButton">Enviar Vídeo</button>
+        <div id="uploadStatus"></div>
+    </div>
+
+    <script type="module">
+        // Importar Firebase SDK
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getStorage, ref as storageRef, uploadBytes } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+        import { getDatabase, ref as dbRef, set } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDsP7lNqu-tDpJxpsyv8t1DW0M_u2EAE3o",
+            authDomain: "bartolomeu-cruz.firebaseapp.com",
+            databaseURL: "https://bartolomeu-cruz-default-rtdb.firebaseio.com",
+            projectId: "bartolomeu-cruz",
+            storageBucket: "bartolomeu-cruz.appspot.com",
+            messagingSenderId: "408863884951",
+            appId: "1:408863884951:web:13e8c2282139c1307dcbd2",
+            measurementId: "G-8TF4WLHKX3"
+        };
+
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const storage = getStorage(app);
+        const database = getDatabase(app);
+
+        // Quando o usuário clicar na imagem, simula o clique no input de arquivo
+        document.getElementById('fileInputImage').addEventListener('click', () => {
+            document.getElementById('fileInput').click();
+        });
+
+        // Envio de vídeo
+        document.getElementById('uploadButton').addEventListener('click', async () => {
+            const videoInput = document.getElementById('fileInput');
+            const videoFile = videoInput.files[0];
+
+            if (!videoFile) {
+                alert('Por favor, selecione um vídeo.');
+                return;
+            }
+
+            const username = localStorage.getItem('username'); // Obtém o nome de usuário do localStorage
+            const profilePic = localStorage.getItem('profilePic'); // Obtém a imagem de perfil do localStorage
+
+            if (!username) {
+                alert('Usuário não encontrado. Faça login novamente.');
+                return;
+            }
+
+            if (!profilePic) {
+                alert('Imagem de perfil não encontrada. Certifique-se de estar logado corretamente.');
+                return;
+            }
+
+            // Refêrencias no Storage
+            const videoRef = storageRef(storage, `videos/${username}/${videoFile.name}`);
+            const profilePicRef = storageRef(storage, `profile_images/${username}/profile_pic.png`);
+
+            try {
+                // Upload do vídeo
+                await uploadBytes(videoRef, videoFile);
+
+                // Upload da imagem de perfil
+                const profilePicBlob = await fetch(profilePic).then(res => res.blob());
+                await uploadBytes(profilePicRef, profilePicBlob);
+
+                // Salvar as informações no Firebase Database
+                const userRef = dbRef(database, 'users/' + username);
+                await set(userRef, {
+                    name: username, // Nome do usuário
+                    profilePicUrl: profilePic, // URL da imagem de perfil armazenada no localStorage
+                    videoUrl: `videos/${username}/${videoFile.name}`, // Caminho do vídeo enviado
+                });
+
+                document.getElementById('uploadStatus').innerText = 'Vídeo e imagem enviados com sucesso!';
+            } catch (error) {
+                console.error('Erro ao enviar vídeo ou imagem:', error);
+                document.getElementById('uploadStatus').innerText = 'Erro ao enviar vídeo ou imagem.';
+            }
+        });
+    </script>
+</body>
+</html>
