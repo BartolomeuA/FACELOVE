@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Facelove</title>
+  <link rel="stylesheet" href="css/home.css">
+  <style>
+    /* Estilos para a seção de usuários */
+    .user-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+      margin: 20px;
+    }
+
+    .user-item {
+      position: relative;
+      background-color: #ccc;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      height: 200px;
+    }
+
+    .user-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-item .user-info {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 5px;
+      border-radius: 5px;
+      width: 90%;
+    }
+
+    .user-item .user-name {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .user-item .online-status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: green; /* Default online status */
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      border: 2px solid white;
+    }
+
+    /* Estilos para outras seções */
+    .section {
+      display: none;
+    }
+
+    /* Quando a seção está visível */
+    .section.active {
+      display: block;
+    }
+    .headerdiv{
+      display: flex;
+      overflow-x: auto;
+      width: 100%;
+      
+    }
+    .headerdiv div{
+      width: 8rem;
+      height: ;
+      border: 2px solid black;
+      margin-left: 2rem;
+      margin-top: 2rem; 
+      font-weight: 900;
+      font-family: Arial, Helvetica, sans-serif;
+      border-radius: 10px;
+      padding: 0.75rem;
+    }
+    header{
+      border: 1px solid black;
+      padding: 1rem;
+      position: fixed;
+     top: 0vh;
+     width: 100%;
+     background: white
+    }
+    
+    
+        /* Estilo para a lista de usuários */
+    .user-list {
+      display: flex;
+      flex-wrap: wrap;
+     
+      overflow-y: auto;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    .user-item {
+      width: 300px;
+      height: 400px;
+      background-size: cover;
+      background-position: center;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+      margin-bottom: 5rem;
+      background-color: #333; /* Cor de fundo padrão enquanto a imagem carrega */
+    }
+
+    .user-item .user-info {
+      background: rgba(0, 0, 0, 0.5); /* Fundo escuro para texto visível */
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .user-item .user-info p {
+      margin: 5px 0;
+    }
+
+    .user-item .user-name {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .user-item .user-age, .user-item .user-gender {
+      font-size: 14px;
+    }
+
+    /* Estilo para o texto de "Carregando..." */
+    .loading-text {
+      text-align: center;
+      font-size: 20px;
+      color: #007bff;
+    }
+
+    .user-item button {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .user-item button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Seções -->
+  <section id="home" class="section active">
+ <!---   <header class="">
+    <div class="headerdiv">
+  <div>
+    <span>Amigos</span>
+  </div>
+
+
+  <div>
+    <span>IA</span>
+  </div>
+  <div>
+    <span>Vídeos</span>
+  </div>
+
+
+  <div>
+    <span>Configurações</span>
+  </div>
+</div>  
+    </header>
+-->
+
+  <div id="userList" class="user-list">
+    <div class="loading-text">
+      
+      
+      <center>
+
+      </center>
+    </div>
+  </div>
+
+  </section>
+
+  <section id="chat" class="section">
+    <h2>Chat</h2>
+    <p>Converse com seus amigos no Facelove.</p>
+  </section>
+
+  <section id="adicionar" class="section">
+    <h2>Adicionar Amigos</h2>
+    <p>Encontre e adicione novos amigos na plataforma.</p>
+  </section>
+
+  <section id="videos" class="section">
+    <h2>Vídeos</h2>
+    <p>Assista aos vídeos compartilhados pelos usuários.</p>
+  </section>
+
+  <section id="perfil" class="section">
+    <h2>Perfil</h2>
+    <p>Veja e edite seu perfil no Facelove.</p>
+  </section>
+
+  <!-- Footer com as imagens -->
+  <footer>
+    <img src="img/home.png" alt="home" onclick="showSection('home')">
+    <a href="chat.html">
+    <img src="img/chat.png" alt="chat">
+    </a>
+    <a href="upload.html">
+    <img src="img/adicionar.png" alt="adicionar">
+    </a>
+    <a href="vervideos.html">
+    <img src="img/videos.png" alt="videos">
+    </a>
+    
+    <a href="perfil.html">
+    <img src="img/Perfil.png" alt="perfil">
+    </a>
+  </footer>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"></script>
+
+  <script type="module">
+    // Import Firebase SDK
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getDatabase, ref, get, set } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+    import { getStorage, ref as storageRef, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDsP7lNqu-tDpJxpsyv8t1DW0M_u2EAE3o",
+      authDomain: "bartolomeu-cruz.firebaseapp.com",
+      databaseURL: "https://bartolomeu-cruz-default-rtdb.firebaseio.com",
+      projectId: "bartolomeu-cruz",
+      storageBucket: "bartolomeu-cruz.appspot.com",
+      messagingSenderId: "408863884951",
+      appId: "1:408863884951:web:13e8c2282139c1307dcbd2",
+      measurementId: "G-8TF4WLHKX3"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const storage = getStorage(app);
+
+    // Função para carregar e exibir os usuários cadastrados
+    const loadUsers = async () => {
+      const userListDiv = document.getElementById('userList');
+      userListDiv.innerHTML = ''; // Limpa a mensagem de "Carregando..."
+
+      const usersRefs = [
+        ref(database, 'masculino/'), // Usuários do gênero masculino
+        ref(database, 'feminino/') // Usuários do gênero feminino
+      ];
+
+      try {
+        for (let usersRef of usersRefs) {
+          const snapshot = await get(usersRef);
+          if (snapshot.exists()) {
+            const users = snapshot.val();
+            Object.keys(users).forEach(async (userKey) => {
+              const user = users[userKey];
+
+              const username = user.username || 'default'; // Caso o username esteja ausente, use um nome padrão
+
+              // Referência à imagem de perfil do Firebase Storage
+              const imageRef = storageRef(storage, 'profile_images/' + username);
+              let profileImageUrl = 'img/user.png'; // Imagem padrão caso a URL não seja encontrada
+
+              try {
+                profileImageUrl = await getDownloadURL(imageRef);
+              } catch (error) {
+                console.error('Erro ao carregar a imagem de perfil:', error);
+              }
+
+              const userDiv = document.createElement('div');
+              userDiv.classList.add('user-item');
+              userDiv.style.backgroundImage = `url('${profileImageUrl}')`; // Define a imagem de fundo
+              userDiv.innerHTML = `
+                <div class="user-info">
+                  <p class="user-name">${username}</p>
+                  <p class="user-age">Idade: ${user.age}</p>
+                  <p class="user-gender">Gênero: ${user.gender}</p>
+                  <p>Sobre: ${user.about}</p>
+                  <button onclick="addFriend('${userKey}', '${username}')">Adicionar como amigo</button>
+                </div>
+              `;
+              userListDiv.appendChild(userDiv);
+            });
+          }
+        }
+
+        if (userListDiv.children.length === 0) {
+          userListDiv.innerHTML = "";
+        }
+      } catch (error) {
+        console.error("Erro ao carregar os usuários:", error);
+        userListDiv.innerHTML = "<p>Ocorreu um erro ao carregar a lista de usuários.</p>";
+      }
+    };
+
+    // Função para adicionar um amigo
+    window.addFriend = async (userKey, friendUsername) => {
+      const currentUser = localStorage.getItem('username');
+
+      if (!currentUser) {
+        alert("Você precisa estar logado para adicionar amigos.");
+        return;
+      }
+
+      try {
+        // Adiciona o amigo à sua lista de amigos
+        await set(ref(database, `amigos/${currentUser}/${friendUsername}`), true);
+
+        // Adiciona você à lista de amigos do seu amigo
+        await set(ref(database, `amigos/${friendUsername}/${currentUser}`), true);
+
+        alert(`Você adicionou ${friendUsername} como amigo!`);
+      } catch (error) {
+        console.error("Erro ao adicionar amigo:", error);
+        alert("Ocorreu um erro ao adicionar o amigo.");
+      }
+    };
+
+    // Carregar os usuários quando a página for carregada
+    window.onload = loadUsers;
+  </script>
+
+</body>
+
+</html>

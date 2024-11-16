@@ -1,0 +1,449 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Facelove</title>
+  
+  <style>
+  button img{
+    width: 2.5;
+    height: 2.5;
+  }
+/* Layout das seções */
+body {
+  display: flex;
+  justify-content: space-between;
+  padding: 0px;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+section {
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+  border-radius: 8px;
+  background-color: #f4f4f4;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 0px;
+}
+
+#friendsSection {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.friend-item {
+  display: flex;
+  align-items: center;
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: white;
+  width: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.friend-item:hover {
+  background-color: #f0f0f0;
+}
+
+.friend-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #ccc;
+  position: relative;
+}
+
+.status-indicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid white; /* Borda branca para destacar */
+}
+
+.friend-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+#chatSection {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f9f9f9;
+  padding: 0px;
+}
+
+/* Seção do cabeçalho do chat */
+#chatHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+#chatHeader img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+#chatHeader h2 {
+  flex-grow: 1;
+  margin-left: 10px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+#backButton {
+  
+  background: white;
+  color: none;
+  border: none;
+  border-radius: none;
+  cursor: pointer;
+  font-size: none;
+  
+}
+
+#backButton:hover {
+  background-color: none;
+}
+
+/* Seção de mensagens */
+#messages {
+  flex-grow: 1;
+  padding: 10px;
+  margin-top: 0px; /* Ajuste para o header fixo */
+  overflow-y: auto;
+  background-color: #fafafa;
+  border-radius: 8px;
+  height: 60vh; /* Ajuste para garantir que o campo de mensagens tenha altura correta */
+}
+
+.message {
+  padding: 12px;
+  border-radius: 12px;
+  max-width: 75%;
+  margin-bottom: 15px;
+  word-wrap: break-word;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.sent {
+  background-image: linear-gradient(#F50057,#F50057);
+  align-self: flex-end;
+  margin-left: auto;
+  margin-bottom: 4rem;
+  color: white;
+  border-radius: 20px;
+  font-weight: 900;
+}
+
+.received {
+background-image: linear-gradient(#E0E0E0,#E0E0E0);
+  font-weight: 900;
+  color: black;
+  margin-bottom: 4rem;
+  
+  
+  
+  border-radius: 20px;
+}
+
+/* Caixa de mensagem fixa na parte inferior */
+.boxmensagem {
+  display: flex;
+  position: fixed;
+  bottom: 0px; /* Alinha no fundo da tela */
+  left: 0px;
+width: 100%;
+  padding: 0.5rem;
+  background-color: #fff;
+  box-shadow: 0 0.1rem 0.5rem black;
+  border-radius: 8px;
+}
+
+#messageInput {
+
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  resize: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-right: 0px;
+  outline: none;
+  height: 1.5rem;
+  width: 77%;
+  padding: 8px;
+}
+
+#messageInput:focus {
+  border-color: none;
+}
+#sendButton img{
+  width: 2.5rem;
+  height: 2.5rem;
+}
+#sendButton {
+  background-color: white;
+  border: none;
+  
+  color: white;
+  border: none;
+  border-radius: 50%;
+  
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0px;
+  width: 2rem;
+  transition: background-color 0.3s;
+}
+
+#sendButton:hover {
+  background-color: white;
+}
+
+/* Status online/offline */
+.status-indicator.online {
+  background-color: green;
+}
+
+.status-indicator.offline {
+  background-color: gray;
+}.sair{
+  margin-top: 0rem;
+  margin-left: 90%;
+  width: 2rem;
+  height: 2rem;
+}
+  </style>
+</head>
+
+<body>
+
+  <!-- Seção dos amigos -->
+  <section id="friendsSection">
+    <a href="home.html"> <img src="img/sair.png" alt="" class="sair"></a>
+    <h2>Seus Amigos</h2>
+    
+    
+
+    <div id="friendsList"></div>
+  </section>
+
+  <!-- Seção do chat -->
+  <section id="chatSection" style="display: none;">
+    <div id="chatHeader">
+      <img id="friendPhoto" src="img/user.png" alt="Foto do amigo" />
+      <h2 id="chatWithUsername"></h2>
+      <button id="backButton" onclick="goBack()"><img src="img/voltar.png" alt=""></button>
+    </div>
+    <div id="messages"></div>
+    <div class="boxmensagem">
+      <textarea id="messageInput" placeholder="Digite sua mensagem..."></textarea>
+      <button id="sendButton"><img src="img/send.png" alt=""></button>
+    </div>
+  </section>
+
+  <script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getDatabase, ref, get, set, push, onChildAdded, onDisconnect } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+import { getStorage, ref as storageRef, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDsP7lNqu-tDpJxpsyv8t1DW0M_u2EAE3o",
+  authDomain: "bartolomeu-cruz.firebaseapp.com",
+  databaseURL: "https://bartolomeu-cruz-default-rtdb.firebaseio.com",
+  projectId: "bartolomeu-cruz",
+  storageBucket: "bartolomeu-cruz.appspot.com",
+  messagingSenderId: "408863884951",
+  appId: "1:408863884951:web:13e8c2282139c1307dcbd2",
+  measurementId: "G-8TF4WLHKX3"
+};
+
+// Inicializa o Firebase
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+const storage = getStorage(app);
+
+// Função para carregar e exibir os amigos
+const loadFriends = async () => {
+  const currentUser = localStorage.getItem('username');
+  if (!currentUser) {
+    alert("Você precisa estar logado para ver seus amigos.");
+    return;
+  }
+
+  const friendsListDiv = document.getElementById('friendsList');
+  friendsListDiv.innerHTML = ''; // Limpa a lista de amigos
+
+  try {
+    // Referência ao nó de amigos do usuário atual
+    const friendsRef = ref(database, `amigos/${currentUser}`);
+    const snapshot = await get(friendsRef);
+
+    if (snapshot.exists()) {
+      const friends = snapshot.val();
+
+      // Itera sobre os amigos e cria os itens da lista
+      Object.keys(friends).forEach(async (friendUsername) => {
+        // Carrega a imagem de perfil do amigo
+        const imageRef = storageRef(storage, 'profile_images/' + friendUsername);
+        let profileImageUrl = 'img/user.png'; // Imagem padrão caso não haja a URL
+        try {
+          profileImageUrl = await getDownloadURL(imageRef);
+        } catch (error) {
+          console.error('Erro ao carregar a imagem de perfil:', error);
+        }
+
+        // Verifica o status do amigo
+        const friendStatusRef = ref(database, `users/${friendUsername}/status`);
+        const friendStatusSnapshot = await get(friendStatusRef);
+        const status = friendStatusSnapshot.exists() ? friendStatusSnapshot.val() : 'offline';
+
+        // Cria a div do amigo
+        const friendDiv = document.createElement('div');
+        friendDiv.classList.add('friend-item');
+        friendDiv.onclick = () => openChat(friendUsername, profileImageUrl); // Ao clicar, abre o chat com o amigo
+        friendDiv.innerHTML = `
+          <img src="${profileImageUrl}" class="friend-photo" />
+          <span class="friend-name">${friendUsername}</span>
+          <div class="status-indicator ${status}"></div>  <!-- Indicador de status -->
+        `;
+
+        // Adiciona o amigo à lista de amigos
+        friendsListDiv.appendChild(friendDiv);
+      });
+    } else {
+      friendsListDiv.innerHTML = "<p>Você não tem amigos ainda.</p>";
+    }
+  } catch (error) {
+    console.error("Erro ao carregar amigos:", error);
+  }
+};
+
+// Função para abrir o chat com o amigo
+window.openChat = async (friendUsername, profileImageUrl) => {
+  const currentUser = localStorage.getItem('username');
+  if (!currentUser) {
+    alert("Você precisa estar logado para conversar.");
+    return;
+  }
+
+  // Cria o chat com a chave combinando os nomes dos usuários
+  const chatKey = [currentUser, friendUsername].sort().join('_');
+  const messagesRef = ref(database, `chats/${chatKey}/messages`);
+
+  // Exibe a seção de chat e esconde a seção de amigos
+  document.getElementById('friendsSection').style.display = 'none';
+  document.getElementById('chatSection').style.display = 'flex';
+
+  // Atualiza o título do chat e a foto do amigo
+  document.getElementById('chatWithUsername').textContent = `Conversando com ${friendUsername}`;
+  document.getElementById('friendPhoto').src = profileImageUrl;
+
+  // Carregar as mensagens do chat
+  const messagesDiv = document.getElementById('messages');
+  messagesDiv.innerHTML = ''; // Limpa as mensagens anteriores
+
+  onChildAdded(messagesRef, (data) => {
+    const message = data.val();
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message');
+    messageElement.classList.add(message.sender === currentUser ? 'sent' : 'received');
+    messageElement.textContent = message.text;
+    messagesDiv.appendChild(messageElement);
+
+    // Garantir que a rolagem vá até o final ao carregar novas mensagens
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  });
+
+  // Função para enviar a mensagem
+  const sendMessage = async () => {
+    const messageInput = document.getElementById('messageInput');
+    const messageText = messageInput.value.trim();
+
+    if (!messageText) {
+      alert("Digite uma mensagem.");
+      return;
+    }
+
+    const newMessageRef = push(messagesRef);
+    await set(newMessageRef, {
+      sender: currentUser,
+      text: messageText,
+      timestamp: Date.now()
+    });
+
+    // Limpa o campo de entrada de texto após o envio
+    messageInput.value = '';
+  };
+
+  // Atribui o evento de enviar mensagem ao botão
+  document.getElementById('sendButton').onclick = sendMessage;
+
+  // Atribui o evento de envio por tecla "Enter" (opcional)
+  document.getElementById('messageInput').addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      sendMessage();
+      event.preventDefault(); // Impede a criação de uma nova linha no textarea
+    }
+  });
+};
+
+// Função para voltar à lista de amigos
+window.goBack = () => {
+  // Esconde a seção de chat e mostra a seção de amigos
+  document.getElementById('friendsSection').style.display = 'flex';
+  document.getElementById('chatSection').style.display = 'none';
+};
+
+// Função para definir o status do usuário como "online" e "offline"
+const setUserOnlineStatus = () => {
+  const currentUser = localStorage.getItem('username');
+  if (!currentUser) {
+    return;
+  }
+
+  const statusRef = ref(database, `users/${currentUser}/status`);
+
+  // Marca o usuário como online
+  set(statusRef, 'online');
+
+  // Quando o usuário desconectar, marque-o como offline
+  const disconnectRef = onDisconnect(statusRef);
+  disconnectRef.set('offline');
+};
+
+// Carregar os amigos quando a página for carregada
+window.onload = () => {
+  loadFriends();
+  setUserOnlineStatus();
+};
+  </script>
+
+</body>
+
+</html>

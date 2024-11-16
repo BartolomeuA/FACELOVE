@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Facelove</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <img src="img/facelove.png" alt="">
+    
+    
+    <a href="login.html">Login</a>
+  </header>
+  
+  <center>
+  <div class="box">
+    
+    <div class="boxcontainer">
+      <form id="userForm">
+        <br><br>
+        <img src="img/facelove.png" alt="">
+        <br>
+        <center>
+        <!-- Input para imagem de perfil -->
+        <input type="file" id="profileImage" accept="image/*" required>
+        <img id="imagePreview" src="img/user.png" alt="Imagem de perfil">
+        <center>
+        <!-- Nome do usuário -->
+        <input type="text" id="userName" placeholder="Digite o seu nome" required>
+
+        <!-- Senha do usuário -->
+        <input type="password" id="userPassword" placeholder="Digite a sua password" required>
+
+        <!-- Idade do usuário -->
+        <input type="text" id="userAge" placeholder="Digite a sua idade" required>
+
+        <!-- Gênero -->
+        <div>
+          <label for="masculino">
+            <input type="radio" id="masculino" name="genero" value="masculino" required> Masculino
+          </label>
+          <label for="feminino">
+            <input type="radio" id="feminino" name="genero" value="feminino"> Feminino
+          </label>
+        </div>
+
+        <!-- Sobre o usuário -->
+        <input type="text" id="userAbout" placeholder="Fala um pouco sobre você">
+
+        <button type="submit">Enviar</button>
+      </form>
+    </div>
+  </div>
+
+<script type="module">
+  // Import Firebase SDK
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { getDatabase, ref, set, get } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+  import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+
+  // Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDsP7lNqu-tDpJxpsyv8t1DW0M_u2EAE3o",
+    authDomain: "bartolomeu-cruz.firebaseapp.com",
+    databaseURL: "https://bartolomeu-cruz-default-rtdb.firebaseio.com",
+    projectId: "bartolomeu-cruz",
+    storageBucket: "bartolomeu-cruz.appspot.com",
+    messagingSenderId: "408863884951",
+    appId: "1:408863884951:web:13e8c2282139c1307dcbd2",
+    measurementId: "G-8TF4WLHKX3"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+  const storage = getStorage(app);
+
+  // Handle image preview and file selection
+  const profileImageInput = document.getElementById('profileImage');
+  const imagePreview = document.getElementById('imagePreview');
+
+  imagePreview.addEventListener('click', () => {
+    profileImageInput.click(); // Simula o clique no input file
+  });
+
+  profileImageInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        imagePreview.src = e.target.result; // Atualiza a imagem de pré-visualização
+        localStorage.setItem('profilePic', e.target.result); // Armazena a imagem no Local Storage
+      };
+      reader.readAsDataURL(file);
+    } else {
+      imagePreview.src = 'perfil.png'; // Reseta para a imagem padrão
+    }
+  });
+
+  // Load profile picture from Local Storage
+  window.onload = () => {
+    const savedProfilePic = localStorage.getItem('profilePic');
+    if (savedProfilePic) {
+      imagePreview.src = savedProfilePic; // Exibe a imagem armazenada
+    }
+  };
+
+  // Função para capturar o IP do usuário
+  async function getUserIP() {
+    try {
+      const response = await fetch('https://api.ipify.org?format=json');
+      const data = await response.json();
+      return data.ip; // Retorna o IP
+    } catch (error) {
+      console.error('Erro ao obter IP:', error);
+      return null; // Retorna null se falhar
+    }
+  }
+
+  // Função para detectar o status de conexão (Online ou Offline)
+  function updateOnlineStatus(isOnline) {
+    const statusRef = ref(database, 'status/' + localStorage.getItem('username'));
+    set(statusRef, {
+      online: isOnline,
+      lastUpdated: new Date().toISOString() // Marca a última atualização
+    });
+  }
+
+  // Detecta mudanças no status de conexão (online/offline)
+  window.addEventListener('online', () => updateOnlineStatus(true));
+  window.addEventListener('offline', () => updateOnlineStatus(false));
+
+  // Função para armazenar todos os dados no localStorage
+  function storeUserDataLocally(name, password, age, about, gender, ip, profileImageURL) {
+    localStorage.setItem('username', name);
+    localStorage.setItem('password', password);
+    localStorage.setItem('age', age);
+    localStorage.setItem('about', about);
+    localStorage.setItem('gender', gender);
+    localStorage.setItem('userIP', ip);
+    localStorage.setItem('profileImageURL', profileImageURL);
+  }
+
+  // Handle form submission
+  document.getElementById('userForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const name = document.getElementById('userName').value.trim().toLowerCase(); // Normaliza o nome
+    const password = document.getElementById('userPassword').value;
+    const age = document.getElementById('userAge').value;
+    const about = document.getElementById('userAbout').value; // Coleta o campo "Sobre o usuário"
+    const file = profileImageInput.files[0];
+    const gender = document.querySelector('input[name="genero"]:checked')?.value; // Obter o valor do gênero selecionado
+
+    if (!gender) {
+      alert('Por favor, selecione um gênero.');
+      return;
+    }
+
+    const userRef = ref(database, gender + '/' + name); // Usando o nome do usuário como chave
+
+    // Verifica se o nome do usuário já existe
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) {
+      alert('Nome de usuário já existe. Por favor, escolha outro.');
+      return;
+    }
+
+    // Captura o IP do usuário
+    const userIP = await getUserIP();
+
+    // Primeiro, faz o upload da imagem para o Firebase Storage
+    let profileImageURL = null; // Inicializa a URL da imagem
+
+    if (file) {
+      // Cria uma referência para o arquivo da imagem
+      const imageRef = storageRef(storage, 'profile_images/' + name); // Usando o nome do usuário para a imagem
+      // Faz o upload do arquivo para o Firebase Storage
+      await uploadBytes(imageRef, file);
+      // Obtém a URL pública da imagem carregada
+      profileImageURL = await getDownloadURL(imageRef);
+    }
+
+    // Salva os dados do usuário no Realtime Database, incluindo a URL da imagem de perfil
+    await set(userRef, {
+      username: name,
+      password: password,
+      age: age,
+      about: about,
+      gender: gender,
+      ip: userIP || "IP não disponível", // Adiciona o IP (caso não consiga capturar, salva "IP não disponível")
+      profileImageURL: profileImageURL || 'default_image_url' // Salva a URL da imagem no DB (caso não tenha imagem, usa uma URL padrão)
+    });
+
+    // Armazenando no LocalStorage todos os dados do usuário
+    storeUserDataLocally(name, password, age, about, gender, userIP, profileImageURL);
+
+    // Atualiza o status de conexão no Firebase
+    updateOnlineStatus(true);
+
+    
+    window.location.href = 'home.html'; // Redireciona para home.html
+  });
+</script>
+</body>
+</html>

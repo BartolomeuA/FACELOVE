@@ -1,0 +1,52 @@
+body{
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+}
+footer{
+  padding: 2rem;
+  position: fixed;
+  top: 86vh;
+  box-shadow: 0 0.1rem 0.5rem #E91E63;
+  width: 100%;
+  display: flex;
+  
+  
+}
+footer img{
+  width: 2rem;
+  height: 2rem;
+  
+  margin-right: 2.1rem;
+}
+footer img:hover{
+  border: 8px solid #E91E63;
+  border-radius: 50%;
+}
+
+    /* Estilo básico para ocultar seções */
+    .section {
+      display: none;
+    }
+
+    /* Estilo para as seções ativas */
+    .active {
+      display: block;
+    }
+
+    /* Estilo para o footer */
+    footer {
+      display: flex;
+      justify-content: space-around;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #fff;
+      padding: 10px;
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    footer img {
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+    }
